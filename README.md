@@ -17,3 +17,10 @@ To run this project
 ## API Documentation
 
 [Documentation](https://documenter.getpostman.com/view/27589244/2sA3kYhyw5#1d84ce83-5cdf-4e7c-9d17-facc1bad66c4)
+
+
+## Database
+
+[Download](https://drive.google.com/file/d/1a4xiVGz5_iPTouOz7TG97jldA61nq7yZ/view?usp=sharing)
+
+
