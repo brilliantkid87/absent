@@ -3,7 +3,9 @@ package repositories
 import (
 	"absent/models"
 	"encoding/json"
+	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -31,6 +33,10 @@ func (r *repository) CreateEmployee(params map[string]interface{}) (int, error) 
 	query := `SELECT employee.create_employee($1::jsonb)`
 
 	if err := r.db.Raw(query, string(paramsJSON)).Scan(&employeeID).Error; err != nil {
+		if strings.Contains(err.Error(), "Employee Code") && strings.Contains(err.Error(), "already exists") {
+			return 0, fmt.Errorf("employee code %s already exists", params["employee_code"])
+		}
+
 		return 0, err
 	}
 

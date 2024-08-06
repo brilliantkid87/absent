@@ -7,6 +7,7 @@ import (
 	"absent/repositories"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -42,18 +43,18 @@ func (h *EmployeeHandler) CreateEmployee(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "hashing pass failed"})
 	}
 
-	employeeParams := map[string]interface{}{
-		"employee_name": employee.EmployeeName,
-	}
+	// employeeParams := map[string]interface{}{
+	// 	"employee_name": employee.EmployeeName,
+	// }
 
-	employees, err := h.Repo.GetAllEmployees(employeeParams)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to check employee"})
-	}
+	// employees, err := h.Repo.GetAllEmployees(employeeParams)
+	// if err != nil {
+	// 	return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to check employee"})
+	// }
 
-	if len(employees) > 0 {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Employee name is already registered"})
-	}
+	// if len(employees) > 0 {
+	// 	return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Employee name is already registered"})
+	// }
 	// Prepare parameters for the repository
 	params := map[string]interface{}{
 		"employee_name": employee.EmployeeName,
@@ -68,6 +69,9 @@ func (h *EmployeeHandler) CreateEmployee(c *fiber.Ctx) error {
 	// Call repository to create employee
 	employeeID, err := h.Repo.CreateEmployee(params)
 	if err != nil {
+		if strings.Contains(err.Error(), "employee code") && strings.Contains(err.Error(), "already exists") {
+			return c.Status(fiber.StatusConflict).JSON(fiber.Map{"error": err.Error()})
+		}
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to create employee"})
 	}
 

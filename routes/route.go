@@ -10,4 +10,6 @@ func RouteInit(app *fiber.App) {
 	MasterLocRoutes(app)
 	MasterPostRoutes(app)
 	AttendanceRoutes(app)
+	MembershipRoutes(app)
+	ContactRoutes(app)
 }
